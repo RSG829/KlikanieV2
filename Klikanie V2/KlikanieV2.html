@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra o Zarabianie Pieniędzy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .upgrade {
+            margin: 20px 0;
+        }
+        .rebirth {
+            background-color: #dc3545;
+        }
+        .rebirth:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gra o Zarabianie Pieniędzy</h1>
+    <h2>Pieniądze: <span id="money">0</span></h2>
+    <h2>Multiplikator: <span id="multiplier">1</span></h2>
+    <h2>Rebirth: <span id="rebirthCount">0</span></h2>
+
+    <button id="earnButton" class="button">Zarabiaj Pieniądze</button>
+
+    <div class="upgrade">
+        <h3>Ulepszenia:</h3>
+        <button id="upgrade1" class="button">Ulepsz 1 (koszt: <span id="upgrade1Cost">10</span>)</button>
+        <button id="upgrade2" class="button">Ulepsz 2 (koszt: <span id="upgrade2Cost">50</span>)</button>
+        <button id="upgrade3" class="button">Ulepsz 3 (koszt: <span id="upgrade3Cost">200</span>)</button>
+    </div>
+
+    <button id="rebirthButton" class="button rebirth">Rebirth (koszt: 200)</button>
+
+    <script>
+        let money = 0;
+        let multiplier = 1;
+        let rebirthCount = 0;
+
+        const upgradeCosts = [10, 50, 200];
+        const upgradeMultipliers = [1, 2, 5];
+
+        const moneyDisplay = document.getElementById("money");
+        const multiplierDisplay = document.getElementById("multiplier");
+        const rebirthCountDisplay = document.getElementById("rebirthCount");
+
+        document.getElementById("earnButton").addEventListener("click", () => {
+            money += multiplier;
+            updateDisplays();
+        });
+
+        document.getElementById("upgrade1").addEventListener("click", () => buyUpgrade(0));
+        document.getElementById("upgrade2").addEventListener("click", () => buyUpgrade(1));
+        document.getElementById("upgrade3").addEventListener("click", () => buyUpgrade(2));
+
+        document.getElementById("rebirthButton").addEventListener("click", () => {
+            if (money >= 200) {
+                rebirthCount++;
+                multiplier = Math.floor(multiplier * 1.5);
+                money = 0;
+                updateDisplays();
+            } else {
+                alert("Musisz mieć przynajmniej 200 pieniędzy, aby wykonać rebirth!");
+            }
+        });
+
+        function buyUpgrade(index) {
+            if (money >= upgradeCosts[index]) {
+                money -= upgradeCosts[index];
+                multiplier += upgradeMultipliers[index];
+                upgradeCosts[index] = Math.floor(upgradeCosts[index] * 1.5); // Zwiększ koszt ulepszenia
+                updateDisplays();
+                updateUpgradeCosts();
+            } else {
+                alert("Nie masz wystarczająco pieniędzy na to ulepszenie!");
+            }
+        }
+
+        function updateDisplays() {
+            moneyDisplay.innerText = money;
+            multiplierDisplay.innerText = multiplier;
+            rebirthCountDisplay.innerText = rebirthCount;
+        }
+
+        function updateUpgradeCosts() {
+            document.getElementById("upgrade1Cost").innerText = upgradeCosts[0];
+            document.getElementById("upgrade2Cost").innerText = upgradeCosts[1];
+            document.getElementById("upgrade3Cost").innerText = upgradeCosts[2];
+        }
+    </script>
+</body>
+</html>
